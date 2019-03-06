@@ -12,6 +12,9 @@ const PSDI_CHARACTERISTIC_UUID  = '26E2B12B-85F0-4F3F-9FDD-91D114270E6E';
 let ledState = false; // true: LED on, false: LED off
 let clickCount = 0;
 
+// pm11op
+let _device = {}
+
 // -------------- //
 // On window load //
 // -------------- //
@@ -52,7 +55,7 @@ function uiCountPressButton() {
     const el = document.getElementById("click-count");
   el.innerText = clickCount;
 
-  return fetch('https://masarun.co/api/line/test', {method: 'POST', body: JSON.stringify({'click': clickCount})})
+  return fetch('https://masarun.co/api/line/test', {method: 'POST', body: JSON.stringify(  {'click': clickCount, 'device': _device.id, 'uuid': USER_SERVICE_UUID})})
 }
 
 function uiToggleStateButton(pressed) {
@@ -166,6 +169,7 @@ function liffRequestDevice() {
 }
 
 function liffConnectToDevice(device) {
+    _device = device
     device.gatt.connect().then(() => {
         document.getElementById("device-name").innerText = device.name;
         document.getElementById("device-id").innerText = device.id;
