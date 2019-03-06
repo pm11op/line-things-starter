@@ -50,7 +50,9 @@ function uiCountPressButton() {
     clickCount++;
 
     const el = document.getElementById("click-count");
-    el.innerText = clickCount;
+  el.innerText = clickCount;
+
+  return fetch('https://masarun.co/api/line/test', {method: 'POST', body: JSON.stringify({'click': clickCount})})
 }
 
 function uiToggleStateButton(pressed) {
