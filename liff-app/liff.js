@@ -52,7 +52,7 @@ function uiToggleLedButton(state) {
 function uiCountPressButton() {
     clickCount++;
 
-    const el = document.getElementById("click-count");
+    const el = document.getElementById("scale_weight");
   el.innerText = clickCount;
 
   return fetch('https://masarun.co/api/line/test', {method: 'POST', body: JSON.stringify(  {'click': clickCount, 'device': _device.id, 'uuid': USER_SERVICE_UUID})})
@@ -216,8 +216,8 @@ function liffConnectToDevice(device) {
 function liffGetUserService(service) {
     // Button pressed state
     service.getCharacteristic(BTN_CHARACTERISTIC_UUID).then(characteristic => {
-      //        liffGetButtonStateCharacteristic(characteristic);
-        liffGetDeviceCharacteristic(characteristic);      
+              liffGetButtonStateCharacteristic(characteristic);
+//        liffGetDeviceCharacteristic(characteristic);      
     }).catch(error => {
         uiStatusError(makeErrorMsg(error), false);
     });
@@ -299,4 +299,4 @@ function uiCountWeight(val) {
     const el = document.getElementById("scale_weight");
   //    el.innerText = val;
       el.innerText = clickCount;
-}
+r}
