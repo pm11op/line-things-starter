@@ -283,6 +283,7 @@ function liffGetDeviceCharacteristic(characteristic) {
         characteristic.addEventListener('characteristicvaluechanged', e => {
             const val = (new Uint8Array(e.target.value.buffer))[0];
             if (val > 0) {
+                uiCountPressButton();
                 uiCountWeight(val);
             } else {
                 uiCountWeight(0);
@@ -296,5 +297,6 @@ function liffGetDeviceCharacteristic(characteristic) {
 
 function uiCountWeight(val) {
     const el = document.getElementById("scale_weight");
-    el.innerText = val;
+  //    el.innerText = val;
+      el.innerText = clickCount;
 }
