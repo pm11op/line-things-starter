@@ -216,7 +216,6 @@ function liffConnectToDevice(device) {
 function liffGetUserService(service) {
     // Button pressed state
   service.getCharacteristic(BTN_CHARACTERISTIC_UUID).then(characteristic => {
-    alert(characteristic)
               liffGetButtonStateCharacteristic(characteristic);
 //        liffGetDeviceCharacteristic(characteristic);      
     }).catch(error => {
@@ -253,7 +252,8 @@ function liffGetButtonStateCharacteristic(characteristic) {
     // (Get notified when button state changes)
     characteristic.startNotifications().then(() => {
         characteristic.addEventListener('characteristicvaluechanged', e => {
-            const val = (new Uint8Array(e.target.value.buffer))[0];
+          const val = (new Uint8Array(e.target.value.buffer))[0];
+          alert(val)          
             if (val > 0) {
                 // press
                 uiToggleStateButton(true);
