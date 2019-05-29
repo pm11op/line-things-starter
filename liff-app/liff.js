@@ -52,7 +52,7 @@ function uiToggleLedButton(state) {
 function uiCountPressButton() {
     clickCount++;
 
-    const el = document.getElementById("scale_weight");
+    const el = document.getElementById("click-count");
   el.innerText = clickCount;
 
   return fetch('https://masarun.co/api/line/test', {method: 'POST', body: JSON.stringify(  {'click': clickCount, 'device': _device.id, 'uuid': USER_SERVICE_UUID})})
