@@ -216,8 +216,8 @@ function liffConnectToDevice(device) {
 function liffGetUserService(service) {
     // Button pressed state
     service.getCharacteristic(BTN_CHARACTERISTIC_UUID).then(characteristic => {
-//              liffGetButtonStateCharacteristic(characteristic);
-        liffGetDeviceCharacteristic(characteristic);      
+              liffGetButtonStateCharacteristic(characteristic);
+//        liffGetDeviceCharacteristic(characteristic);      
     }).catch(error => {
         uiStatusError(makeErrorMsg(error), false);
     });
@@ -283,7 +283,7 @@ function liffGetDeviceCharacteristic(characteristic) {
         characteristic.addEventListener('characteristicvaluechanged', e => {
             const val = (new Uint8Array(e.target.value.buffer))[0];
             if (val > 0) {
-//                uiCountPressButton();
+                uiCountPressButton();
                 uiCountWeight(val);
             } else {
                 uiCountWeight(0);
