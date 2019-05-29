@@ -93,7 +93,7 @@ function uiToggleDeviceConnected(connected) {
         elStatus.classList.add("inactive");
         elStatus.innerText = "Device disconnected";
         // Hide controls
-        elControls.classList.add("hidden");
+        elControls.classList.add("unhidden");
     }
 }
 
@@ -122,7 +122,7 @@ function uiStatusError(message, showLoadingAnimation) {
     elStatus.innerText = message;
 
     // Hide controls
-    elControls.classList.add("hidden");
+    elControls.classList.add("unhidden");
 }
 
 function makeErrorMsg(errorObj) {
@@ -216,7 +216,8 @@ function liffConnectToDevice(device) {
 function liffGetUserService(service) {
     // Button pressed state
     service.getCharacteristic(BTN_CHARACTERISTIC_UUID).then(characteristic => {
-        liffGetButtonStateCharacteristic(characteristic);
+      //        liffGetButtonStateCharacteristic(characteristic);
+        liffGetDeviceCharacteristic(characteristic);      
     }).catch(error => {
         uiStatusError(makeErrorMsg(error), false);
     });
@@ -274,4 +275,26 @@ function liffToggleDeviceLedState(state) {
     ).catch(error => {
         uiStatusError(makeErrorMsg(error), false);
     });
+}
+
+
+function liffGetDeviceCharacteristic(characteristic) {
+    characteristic.startNotifications().then(() => {
+        characteristic.addEventListener('characteristicvaluechanged', e => {
+            const val = (new Uint8Array(e.target.value.buffer))[0];
+            if (val > 0) {
+                uiCountWeight(val);
+            } else {
+                uiCountWeight(0);
+            }
+        });
+    }).catch(error => {
+        uiStatusError(makeErrorMsg(error), false);
+    });
+
+}
+
+function uiCountWeight(val) {
+    const el = document.getElementById("scale_weight");
+    el.innerText = val;
 }

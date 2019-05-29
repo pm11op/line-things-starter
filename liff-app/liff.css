@@ -95,3 +95,12 @@ p {
     max-width: 200px;
     font-family: monospace, monospace;
 }
+
+/* pm11op */
+.scale label {
+    display: block;
+}
+#scale_weight {
+    font-size: 6em;
+    margin: 50px 0;
+}
