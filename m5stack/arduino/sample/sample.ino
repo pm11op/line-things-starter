@@ -5,10 +5,10 @@
 #include <M5Stack.h>
 
 // Device Name: Maximum 30 bytes
-#define DEVICE_NAME "LINE Things Trial M5Stack"
+#define DEVICE_NAME "Clean Up Scale Trial M5Stack"
 
 // User service UUID: Change this to your generated service UUID
-#define USER_SERVICE_UUID "91E4E176-D0B9-464D-9FE4-52EE3E9F1552"
+#define USER_SERVICE_UUID "d4085648-ec7e-471a-a612-cb98fe8f33a7"
 // User service characteristics
 #define WRITE_CHARACTERISTIC_UUID "E9062E71-9E62-4BC6-B0D3-35CDCD9B027B"
 #define NOTIFY_CHARACTERISTIC_UUID "62FBD229-6EDD-4D1A-B554-5C4E1BB29169"
@@ -85,20 +85,24 @@ void setup() {
   Serial.println("Ready to Connect");
 }
 
+uint8_t btnValue = 0;
 void loop() {
-  uint8_t btnValue;
 
   M5.update();
 
-  if (M5.BtnB.wasPressed()) {
-    btnValue = 1;
-    notifyCharacteristic->setValue(&btnValue, 1);
-    notifyCharacteristic->notify();
-  } else if (M5.BtnB.wasReleased()) {
-    btnValue = 0;
-    notifyCharacteristic->setValue(&btnValue, 1);
+  if (M5.BtnA.wasPressed()) {
+    btnValue += 100;
+    notifyCharacteristic->setValue(&btnValue, btnValue);
+//    notifyCharacteristic->setValue(&btnValue, 1);
+
     notifyCharacteristic->notify();
   }
+  if (M5.BtnC.wasPressed()) {
+    btnValue = 0;
+    notifyCharacteristic->setValue(&btnValue, btnValue);
+    notifyCharacteristic->notify();
+  }
+
 
   // Disconnection
   if (!deviceConnected && oldDeviceConnected) {
