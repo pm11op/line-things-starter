@@ -3,16 +3,15 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <script src=" https://d.line-scdn.net/liff/1.0/sdk.js"></script>
-    <script src="liff.js?0.10"></script>
-    <script src="odometer.js"></script>    
-    <link rel="stylesheet" href="odometer-theme-default.css" />
+    <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js"></script>
+    <script src="liff.js?0.12"></script>
     <link rel="stylesheet" type="text/css" href="liff.css" />
   </head>
 
   <body>
     <!-- Title -->
-    <h2>Clean Up Scale Trial 0.11</h2>
+    <h2>Clean Up Scale Trial 0.12</h2>
     <hr />
     <p>
       <img id="loading-animation" class="" src="loading.gif" height="14px" />
@@ -22,8 +21,7 @@
     <div id="controls" class="unhidden">
       <div class="scale">
         <label>Weight</label>
-        <p id="scale_weight" class="odometer">0</p>
-        <p id="scale_weight_fixed" class="hidden odometer-auto-theme">0</p>
+        <p id="scale_weight">0</p>
       </div>
       <!-- Device Info Table -->
       <table class="device-info-table">
@@ -39,20 +37,20 @@
           <th class="device-info-cell device-info-key">PSDI</th>
           <td class="device-info-cell device-info-val" id="device-psdi"></td>
         </tr>
-        <tr>
+        <tr class="hidden">
           <th class="device-info-cell device-info-key">Button state</th>
           <td class="device-info-cell device-info-val">
             <button id="btn-state" class="btn btn-state" disabled>Released</button>
           </td>
         </tr>
-        <tr>
+        <tr class="hidden">
           <th class="device-info-cell device-info-key">Click count</th>
           <td class="device-info-cell device-info-val" id="click-count">0</td>
         </tr>
       </table>
       <hr class="hidden" />
       <!-- Toggle LED -->
-      <p class="unhidden">
+      <p class="hidden">
         <button id="btn-led-toggle" class="btn btn-led-toggle" onclick="handlerToggleLed()">Switch LED ON</button>
       </p>
       <hr class="hidden" />

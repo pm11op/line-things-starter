@@ -15,12 +15,6 @@ let clickCount = 0;
 // pm11op
 let _device = {}
 
-// odometer options
-// see https://github.hubspot.com/odometer/
-window.odometerOptions = {
-  duration: 500,
-}
-
 // -------------- //
 // On window load //
 // -------------- //
@@ -303,9 +297,11 @@ function liffGetDeviceCharacteristic(characteristic) {
 function uiCountWeight(val) {
   const el = document.getElementById("scale_weight");
   if (el) {
-    el.innerText = val;
+//    el.innerText = val;
+    startAnim(val, el)
+    fixVal(val)
+    return
     if (!el.classList.contains('hidden')) {
-      fixVal(val)
     }
   }
 }
@@ -322,48 +318,71 @@ const CleanUpScale = {
     reset: 10,
   },
   avg: 0,
+  isAnimating: false,
+  isReset: false,
+  duration: 0.5,
 }
+
+function startAnim(val, el) {
+  // reset 時、from は fixedvalue を使用する
+  var fromval
+  if (CleanUpScale.isReset) {
+    fromval = CleanUpScale.fixedValue
+    CleanUpScale.fixedValue = 0
+    CleanUpScale.isReset = false
+  } else {
+    fromval = CleanUpScale.values[CleanUpScale.values.length-1] || 0
+  }
+  putValue(val)
+  
+  // fix したら、次の reset までは維持する
+  if (CleanUpScale.isAnimating || CleanUpScale.fixedValue > 0) {
+    return
+  }
+  
+  CleanUpScale.isAnimating = true
+
+  let obj = {count: fromval}
+  
+  TweenMax.to(obj, CleanUpScale.duration, {
+    count: val,
+    ease: Power3.easeInOut,
+    onUpdate: () => {
+      el.textContent = Math.floor(obj.count)
+    },
+    onComplete: () => {
+      CleanUpScale.isAnimating = false
+      if (CleanUpScale.fixedValue > 0) {
+        el.textContent = CleanUpScale.fixedValue
+        el.classList.add("fixed")
+        setTimeout(()=>{
+          el.classList.remove("fixed")
+        }, 1000)
+      }
+    }
+  })
+}
+
 function average(p,c,i,a){return p + (c/a.length)}
 function rootMean(p,c,i,a){
   return p + (Math.pow(c-CleanUpScale.avg, 2)/a.length)
 }
 
 function fixVal(val) {
-  putValue(val)
   var avg = CleanUpScale.values.reduce(average, 0)
   CleanUpScale.avg = avg
   var std = Math.sqrt(CleanUpScale.values.reduce(rootMean, 0))
-  console.log(CleanUpScale, avg, std)
+//  console.log(CleanUpScale, avg, std)
   if (CleanUpScale.values.length > CleanUpScale.n / 2  &&
       std <= CleanUpScale.threshold.fix) {
-    console.log('fixed!!')
-    uiFixVal(val)
+//    console.log('fixed!!')
+    CleanUpScale.fixedValue = val
   } else if (std > CleanUpScale.threshold.reset) {
     CleanUpScale.values = [val]
-    console.log('reseted!!')
+    CleanUpScale.isReset = true
+//    console.log('reseted!!')
   }
 }
-
-function uiFixVal(val) {
-  const el = document.getElementById("scale_weight");
-  const el_fixed = document.getElementById("scale_weight_fixed");
-  var formatedVal
-  if (el) {
-    el.classList.add("hidden")
-  }
-  if (el_fixed && el_fixed.classList.contains('hidden')) {
-    formatedVal = val.toLocaleString()
-    el_fixed.innerHTML = formatedVal.replace(',', '<span class="odometer-formatting-mark">,</span>')
-    el_fixed.classList.remove("hidden");
-    setTimeout(()=>{
-      CleanUpScale.values = []
-      el_fixed.classList.add("hidden");
-      el.odometer.update(val)
-      el.classList.remove("hidden");
-    }, 2000)
-  }
-}
-
 
 function putValue(val) {
   while (CleanUpScale.values.length >= CleanUpScale.n) {

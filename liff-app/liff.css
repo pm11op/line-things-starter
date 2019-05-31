@@ -105,8 +105,7 @@ p {
     font-size: 6em;
     margin: 50px 0;
 }
-#scale_weight_fixed {
-    margin-top: 60px;
+.fixed {
     animation: flash 1s;
 }
 
@@ -126,9 +125,4 @@ p {
   90%{
     opacity: 1;
   }
-}
-
-#scale_weight_fixed .odometer-formatting-mark{
-    position: relative;
-    bottom: 0.1em;
 }
