@@ -15,10 +15,15 @@ let clickCount = 0;
 // pm11op
 let _device = {}
 
+// odometer options
+// see https://github.hubspot.com/odometer/
+window.odometerOptions = {
+  duration: 500,
+}
+
 // -------------- //
 // On window load //
 // -------------- //
-
 window.onload = () => {
     initializeApp();
 };
@@ -296,7 +301,73 @@ function liffGetDeviceCharacteristic(characteristic) {
 }
 
 function uiCountWeight(val) {
-    const el = document.getElementById("scale_weight");
-      el.innerText = val;
-//      el.innerText = clickCount;
+  const el = document.getElementById("scale_weight");
+  if (el) {
+    el.innerText = val;
+    if (!el.classList.contains('hidden')) {
+      fixVal(val)
+    }
+  }
+}
+
+/*
+  直近 n 回の計測の標準偏差が M 未満であれば確定アニメーション入れて l秒固定
+  標準偏差が P 以上であれば配列リセット
+*/
+const CleanUpScale = {
+  n : 5,
+  values: [],
+  threshold: {
+    fix: 1,
+    reset: 10,
+  },
+  avg: 0,
+}
+function average(p,c,i,a){return p + (c/a.length)}
+function rootMean(p,c,i,a){
+  return p + (Math.pow(c-CleanUpScale.avg, 2)/a.length)
+}
+
+function fixVal(val) {
+  putValue(val)
+  var avg = CleanUpScale.values.reduce(average, 0)
+  CleanUpScale.avg = avg
+  var std = Math.sqrt(CleanUpScale.values.reduce(rootMean, 0))
+  console.log(CleanUpScale, avg, std)
+  if (CleanUpScale.values.length > CleanUpScale.n / 2  &&
+      std <= CleanUpScale.threshold.fix) {
+    console.log('fixed!!')
+    uiFixVal(val)
+  } else if (std > CleanUpScale.threshold.reset) {
+    CleanUpScale.values = [val]
+    console.log('reseted!!')
+  }
+}
+
+function uiFixVal(val) {
+  const el = document.getElementById("scale_weight");
+  const el_fixed = document.getElementById("scale_weight_fixed");
+  var formatedVal
+  if (el) {
+    el.classList.add("hidden")
+  }
+  if (el_fixed && el_fixed.classList.contains('hidden')) {
+    formatedVal = val.toLocaleString()
+    el_fixed.innerHTML = formatedVal.replace(',', '<span class="odometer-formatting-mark">,</span>')
+    el_fixed.classList.remove("hidden");
+    setTimeout(()=>{
+      CleanUpScale.values = []
+      el_fixed.classList.add("hidden");
+      el.odometer.update(val)
+      el.classList.remove("hidden");
+    }, 2000)
+  }
+}
+
+
+function putValue(val) {
+  while (CleanUpScale.values.length >= CleanUpScale.n) {
+    CleanUpScale.values.shift()
+  }
+  CleanUpScale.values.push(val)
 }

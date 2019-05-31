@@ -85,21 +85,30 @@ void setup() {
   Serial.println("Ready to Connect");
 }
 
-uint8_t btnValue = 0;
+uint32_t btnValue = 0;
 void loop() {
 
   M5.update();
 
   if (M5.BtnA.wasPressed()) {
     btnValue += 100;
-    notifyCharacteristic->setValue(&btnValue, btnValue);
-//    notifyCharacteristic->setValue(&btnValue, 1);
+//    data_buff[0] = (int16_t)(btnValue * 100) & 0xff;
+//    data_buff[1] = ((int16_t)(btnValue * 100.0) >> 8);
+//    Serial.printf("*** NOTIFY: %d, %d ***\n", data_buff[0], data_buff[1]);
+//    notifyCharacteristic->setValue(data_buff, 2);
+    Serial.printf("*** NOTIFY: %d, %d ***\n", btnValue, sizeof(btnValue));
+    notifyCharacteristic->setValue(&btnValue, sizeof(btnValue));
 
     notifyCharacteristic->notify();
   }
   if (M5.BtnC.wasPressed()) {
     btnValue = 0;
-    notifyCharacteristic->setValue(&btnValue, btnValue);
+//    data_buff[0] = (int16_t)(btnValue * 100) & 0xff;
+ //   data_buff[1] = ((int16_t)(btnValue * 100.0) >> 8);
+  //  Serial.printf("*** NOTIFY: %d, %d ***\n", data_buff[0], data_buff[1]);
+//    notifyCharacteristic->setValue(data_buff, 2);
+    
+    notifyCharacteristic->setValue(&btnValue, btnValue(btnValue));
     notifyCharacteristic->notify();
   }
 

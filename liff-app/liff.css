@@ -69,7 +69,7 @@ p {
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 .device-info-table {
@@ -100,7 +100,35 @@ p {
 .scale label {
     display: block;
 }
-#scale_weight {
+#scale_weight, #scale_weight_fixed
+{
     font-size: 6em;
     margin: 50px 0;
+}
+#scale_weight_fixed {
+    margin-top: 60px;
+    animation: flash 1s;
+}
+
+@keyframes flash {
+  50%{
+    opacity: 1;
+  }
+  55%{
+    opacity: 0.2;
+  }
+  70%{
+    opacity: 1;
+  }
+  75%{
+    opacity: 0.2;
+  }
+  90%{
+    opacity: 1;
+  }
+}
+
+#scale_weight_fixed .odometer-formatting-mark{
+    position: relative;
+    bottom: 0.1em;
 }

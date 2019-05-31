@@ -572,7 +572,6 @@
   })();
 
   Odometer.options = (_ref = window.odometerOptions) != null ? _ref : {};
-
   setTimeout(function() {
     var k, v, _base, _ref1, _results;
     if (window.odometerOptions) {
